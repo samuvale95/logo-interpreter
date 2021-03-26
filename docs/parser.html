@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>parser.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <div class='section'>
+    <div class='docs'><h1>parser.py</h1></div>
+  </div>
+  <div class='clearall'>
+  <div class='section' id='section-0'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-0'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">liblet</span> <span class="kn">import</span> <span class="n">ANTLR</span><span class="p">,</span> <span class="n">Tree</span><span class="p">,</span> <span class="n">AnnotatedTreeWalker</span>
+<span class="kn">import</span> <span class="nn">os</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-1'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-1'>#</a>
+      </div>
+      <p>Dispatch table che viene usata per standardizzare i nomi dei comandi che hanno anche un abbreviazione.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">class</span> <span class="nc">UndefinedNodeException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;/Users/samuele/LeT/logoProject/src/logoGrammar.g4&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">inf</span><span class="p">:</span>
+        <span class="n">grammar</span> <span class="o">=</span> <span class="n">inf</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="n">ANTLR_GRAMMAR</span> <span class="o">=</span> <span class="n">ANTLR</span><span class="p">(</span><span class="n">grammar</span><span class="p">)</span>
+<span class="n">logoToAst</span> <span class="o">=</span> <span class="n">AnnotatedTreeWalker</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-2'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-2'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="n">DT_COMMAND</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;print&#39;</span><span class="p">:</span> <span class="s1">&#39;pr&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;forward&#39;</span><span class="p">:</span> <span class="s1">&#39;fd&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;back&#39;</span><span class="p">:</span> <span class="s1">&#39;bk&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;left&#39;</span><span class="p">:</span> <span class="s1">&#39;lt&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;right&#39;</span><span class="p">:</span> <span class="s1">&#39;rt&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;setheading&#39;</span><span class="p">:</span> <span class="s1">&#39;seth&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;showturtle&#39;</span><span class="p">:</span> <span class="s1">&#39;st&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;hideturtle&#39;</span><span class="p">:</span> <span class="s1">&#39;ht&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;clearscreen&#39;</span><span class="p">:</span> <span class="s1">&#39;cs&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;setpencolor&#39;</span><span class="p">:</span> <span class="s1">&#39;setpc&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;penup&#39;</span><span class="p">:</span> <span class="s1">&#39;pu&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;pendown&#39;</span><span class="p">:</span> <span class="s1">&#39;pd&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="s1">&#39;op&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;less?&#39;</span><span class="p">:</span> <span class="s1">&#39;lessp&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;greater?&#39;</span><span class="p">:</span> <span class="s1">&#39;greaterp&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;lessequal?&#39;</span><span class="p">:</span> <span class="s1">&#39;lessequalp&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;greaterequal?&#39;</span><span class="p">:</span> <span class="s1">&#39;greaterequalp&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;and&#39;</span><span class="p">:</span> <span class="s1">&#39;and&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;or&#39;</span><span class="p">:</span> <span class="s1">&#39;or&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;not&#39;</span><span class="p">:</span> <span class="s1">&#39;not&#39;</span>
+<span class="p">}</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-3'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-3'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">children_filter</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">filter_elem</span><span class="p">,</span> <span class="n">children</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">child</span><span class="p">:</span> <span class="n">child</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">filter_elem</span><span class="p">,</span> <span class="n">children</span><span class="p">))</span>
+
+<span class="n">OPERATORSNAME_TYPE</span> <span class="o">=</span> <span class="s1">&#39;Op&#39;</span>
+<span class="n">NAME_TYPE</span> <span class="o">=</span> <span class="s1">&#39;STRING&#39;</span>
+<span class="n">ARBOOLOPERATIONS_TYPE</span> <span class="o">=</span> <span class="s1">&#39;arithmBoolOperations&#39;</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-4'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-4'>#</a>
+      </div>
+      <h3><span id="prog" href="prog">prog</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">prog</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-5'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-5'>#</a>
+      </div>
+      <p>Rappresenta il nodo iniziale dell&rsquo;albero di parsing.
+Ogni figlio rappresenta una linea del programma
+La funzione ripulisce da tutti i nodi non necessari e restituisce l&rsquo;albero che ha per figli la visita ricorsiva di ognuno di essi.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span> <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;EOL&quot;</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-6'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-6'>#</a>
+      </div>
+      <h3><span id="line" href="line">line</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">line</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-7'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-7'>#</a>
+      </div>
+      <p>Ogni figlio di line rappresenta una linea del programma.
+Una line può contenere più espressioni o comandi e sono reppresentati dai figli.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]},[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-8'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-8'>#</a>
+      </div>
+      <h3><span id="arithmetic-and-boolean-operations" href="arithmetic-and-boolean-operations">arithmetic and boolean operations</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">arithmBoolOperations</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-9'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-9'>#</a>
+      </div>
+      <p>Definisce tutte le operazioni di tipo aritmetico e booleano.
+Standardizza i nomi scrivendoli tutti in minuscolo e se peresentano abbreviazioni viene usato il nome all interno 
+della dispatch table.
+Ogni figlio dell&rsquo;albero rappresenta un parametro dell&rsquo;operazione.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">child</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">children</span> <span class="o">=</span> <span class="n">children_filter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;(&#39;</span><span class="p">,</span><span class="s1">&#39;)&#39;</span><span class="p">,</span><span class="s1">&#39;EOL&#39;</span><span class="p">],</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">DT_COMMAND</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="k">if</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">DT_COMMAND</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-10'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-10'>#</a>
+      </div>
+      <h3><span id="control-structure" href="control-structure">control structure</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">controlStructure</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-11'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-11'>#</a>
+      </div>
+      <p>Definisce tutte le strutture di controllo.
+I nomi delle strutture di controllo che hanno delle abbreviazioni vengono standardizzati tramite la dispatch table.
+Al nome di ognuna di essi viene agginta la parola <strong>State</strong> per non creare conflitto con python.
+L&rsquo;albero è definito in base al comando.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">child</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="n">children_filter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;(&#39;</span><span class="p">,</span><span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="s1">&#39;EOL&#39;</span><span class="p">],</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">DT_COMMAND</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="k">if</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">DT_COMMAND</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">name</span><span class="o">+</span><span class="s2">&quot;State&quot;</span><span class="p">},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-12'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-12'>#</a>
+      </div>
+      <h3><span id="graphic" href="graphic">graphic</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">graphic</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-13'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-13'>#</a>
+      </div>
+      <p>Definisce tutte i comandi di tipo grafico.
+Vengono eliminate le parentesi se sono presenti.
+Ogni figlio rappresenta un parametro del comando, un nodo può anche non avere nessun figli.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">child</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="n">children_filter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;EOL&#39;</span><span class="p">],</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">DT_COMMAND</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="k">if</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">DT_COMMAND</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-14'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-14'>#</a>
+      </div>
+      <h3><span id="sys" href="sys">sys</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">sys</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-15'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-15'>#</a>
+      </div>
+      <p>Definisce le funzioni print e make.
+Standardizza i nomi tramite la dispatch table definita in  <a href="parser.html#command">parser.py</a>
+I figli definiscono i parametri dei comandi.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">child</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">children</span> <span class="o">=</span> <span class="n">children_filter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;(&#39;</span><span class="p">,</span><span class="s1">&#39;)&#39;</span><span class="p">,</span><span class="s1">&#39;EOL&#39;</span><span class="p">],</span> <span class="n">child</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">DT_COMMAND</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span> <span class="k">if</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="n">DT_COMMAND</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">else</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-16'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-16'>#</a>
+      </div>
+      <h3><span id="expression" href="expression">expression</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">expression</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-17'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-17'>#</a>
+      </div>
+      <p>Rappresenta un espressione la quale a sua volta può essere composta da:</p>
+<pre><code>- Numeri 
+- Deref
+- Invocazioni di procedura
+- Strutture di controllo
+- String literal
+- Boolean
+- Connettivi logici
+</code></pre>
+<p>Possono essere fatte delle operazioni tra espressioni che sono:</p>
+<pre><code>- Somma
+- Sottrazione
+- Moltiplicazione
+- Divisione
+- Confronto
+</code></pre>
+<p>L&rsquo;espressione rappresenta in sostanza tutto cio&rsquo; che restituisce un risultato.
+Non tutte le operazioni tra i componenti delle espressioni sono lecite.
+Sono presenti controlli a tal proposito che lanciano un eccezione di <strong>TypeError</strong> se vengono fatte
+operazioni non permesse tra i vari tipi.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">sign</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="n">children_filter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,[</span><span class="s1">&#39;(&#39;</span><span class="p">,</span><span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="s1">&#39;EOL&#39;</span><span class="p">],</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">]:</span> 
+            <span class="n">sign</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span> <span class="k">break</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sign</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> 
+        <span class="k">if</span> <span class="n">sign</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">sign</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sign</span> <span class="o">=</span> <span class="s1">&#39;+&#39;</span>
+
+        <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;sign&#39;</span><span class="p">:</span> <span class="n">sign</span><span class="p">},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span> <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;+&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">]])</span>
+
+
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-18'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-18'>#</a>
+      </div>
+      <h3><span id="number" href="number">number</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">number</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-19'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-19'>#</a>
+      </div>
+      <p>Nodo che rappresenta un valore numerico che puo&rsquo; essere o <code>INT</code> oppure <code>FLOAT</code>.
+Non ha nessun figlio.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-20'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-20'>#</a>
+      </div>
+      <h3><span id="muldivoperator" href="muldivoperator">muldivOperator</h3>
+<p></span></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">muldivoperators</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-21'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-21'>#</a>
+      </div>
+      <p>Rappresenta gli operatori di <strong>moltipolicazione</strong> e <strong>divisione</strong>.
+Non ha nessun figlio.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">OPERATORSNAME_TYPE</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-22'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-22'>#</a>
+      </div>
+      <h3><span id="addsuboperator" href="addsuboperator">addSubOperator</h3>
+<p></span></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">addsuboperators</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-23'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-23'>#</a>
+      </div>
+      <p>Rappresenta gli operatori di <strong>somma</strong> e <strong>sottrazione</strong>.
+Non ha nessun figlio.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">OPERATORSNAME_TYPE</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-24'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-24'>#</a>
+      </div>
+      <h3><span id="stringliteral" href="stringliteral">stringliteral</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">STRINGLITERAL</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-25'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-25'>#</a>
+      </div>
+      <p>Rappresenta una stringa.
+Il valore all interno del nodo viene salvato senza il carattere <code>"</code></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-26'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-26'>#</a>
+      </div>
+      <h3><span id="value" href="value">value</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-27'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-27'>#</a>
+      </div>
+      <p>Il nodo value non viene considerato, viene saltato e restituisce la visita ricorsiva sul suo unico figlio</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">visit</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-28'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-28'>#</a>
+      </div>
+      <h3><span id="proceduredeclaration" href="proceduredeclaration">procedureDeclaration</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">procedureDeclaration</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-29'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-29'>#</a>
+      </div>
+      <p>Rappresenta una dichiarazione di funzione.
+Come campo del nodo c&rsquo;è un array con i nomi dei parametri.
+I figli invece rappresentano il corpo della funzione.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">children</span> <span class="o">=</span> <span class="n">children_filter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;EOL&#39;</span><span class="p">],</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+    <span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="n">child</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span> <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;parameterDeclarations&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s1">&#39;params&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">},</span> <span class="p">[</span><span class="n">child</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span> <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;parameterDeclarations&#39;</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-30'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-30'>#</a>
+      </div>
+      <h3><span id="parameterdeclaration" href="parameterdeclaration">parameterDeclaration</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">parameterDeclarations</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-31'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-31'>#</a>
+      </div>
+      <p>Rappresenta la dichiarazione dei parametri della funzione</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">visit</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-32'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-32'>#</a>
+      </div>
+      <h3><span id="procedureinvocation" href="procedureinvocation">procedureInvocation</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">procedureInvocation</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-33'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-33'>#</a>
+      </div>
+      <p>Rappresenta un invocazione di procedura.
+I figli rappresentano i parametri.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">children</span> <span class="o">=</span> <span class="n">children_filter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;(&#39;</span><span class="p">,</span><span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="s1">&#39;EOL&#39;</span><span class="p">],</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-34'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-34'>#</a>
+      </div>
+      <h3><span id="parameters" href="parameters">parameters</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">parameters</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-35'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-35'>#</a>
+      </div>
+      <p>Rappresenta i parametri di un invocazione di funzione.
+Presenta un unico figlio che è il parametro effettivo.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">visit</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-36'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-36'>#</a>
+      </div>
+      <h3><span id="block" href="block">block</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">block</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-37'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-37'>#</a>
+      </div>
+      <p>Definisce un blocco di istruzioni.
+Ogni figlio del blocco rappresenta un istruzione.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;EOL&#39;</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-38'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-38'>#</a>
+      </div>
+      <h3><span id="comparison" href="comparison">comparison</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">comparison</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-39'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-39'>#</a>
+      </div>
+      <p>Definisce l&rsquo;operazione di comparazione tra due valori comparabili.
+Vengono eliminatei i nodi rappresentanti le parentesi se presenti.
+Contiene tre figli i quali rappresentano l&rsquo;operazione e i due operandi.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">children</span> <span class="o">=</span> <span class="n">children_filter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;(&#39;</span><span class="p">,</span><span class="s1">&#39;)&#39;</span><span class="p">,</span><span class="s1">&#39;EOL&#39;</span><span class="p">],</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-40'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-40'>#</a>
+      </div>
+      <h3><span id="comparisonoperator" href="comparisonoperator">comparisonOperator</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">comparisonOperator</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-41'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-41'>#</a>
+      </div>
+      <p>Definisce gli operatori booleani di comparazione <code>[&gt;, &lt;, =, &gt;=, &lt;=]</code></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-42'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-42'>#</a>
+      </div>
+      <h3><span id="boolean" href="boolean">boolean</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">Boolean_</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-43'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-43'>#</a>
+      </div>
+      <p>Rappresenta un boolean. 
+Siccome i valori <code>True</code> e <code>False</code> non sono case sensitive e possono presentare un carattere <code>"</code> prima del nome
+standardizzo i nomi e li salvo all&rsquo;interno del nodo.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">value</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">==</span> <span class="s1">&#39;false&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">False</span><span class="p">})</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-44'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-44'>#</a>
+      </div>
+      <h3><span id="deref" href="deref">deref</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">deref</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-45'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-45'>#</a>
+      </div>
+      <p>Definisce la deferenziazione di una variabile.
+Il nodo padre ha sempre un figlio che rappresenta il nome della variabile da referenziare</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;:&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">])])</span>
+    
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-46'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-46'>#</a>
+      </div>
+      <h3><span id="readword" href="readword">readword</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">rw</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-47'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-47'>#</a>
+      </div>
+      <p>Definisce il nome dell procedure Read Word</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-48'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-48'>#</a>
+      </div>
+      
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">NAME_TYPE</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-49'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-49'>#</a>
+      </div>
+      <h3><span id="and" href="and">and</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">and_</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-50'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-50'>#</a>
+      </div>
+      <p>Rappresenta l&rsquo;operazione logica di and, i figli rappresentano i parametri dell&rsquo;istruzione.
+Come figli possono esserci anche dei blocchi di istruzioni logiche.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">children</span> <span class="o">=</span> <span class="n">children_filter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;(&#39;</span><span class="p">,</span><span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="s1">&#39;EOL&#39;</span><span class="p">],</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">ARBOOLOPERATIONS_TYPE</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">DT_COMMAND</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-51'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-51'>#</a>
+      </div>
+      <h3><span id="or" href="or">or</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">or_</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-52'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-52'>#</a>
+      </div>
+      <p>Rappresenta l&rsquo;operazione logica di or, i figli rappresentano i parametri dell&rsquo;istruzione.
+Come figli possono esserci anche dei blocchi di istruzioni logiche.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">children</span> <span class="o">=</span> <span class="n">children_filter</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;(&#39;</span><span class="p">,</span><span class="s1">&#39;)&#39;</span><span class="p">,</span> <span class="s1">&#39;EOL&#39;</span><span class="p">],</span><span class="n">tree</span><span class="o">.</span><span class="n">children</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">ARBOOLOPERATIONS_TYPE</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">DT_COMMAND</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-53'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-53'>#</a>
+      </div>
+      <h3><span id="not" href="not">not</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">not_</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-54'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-54'>#</a>
+      </div>
+      <p>Rappresenta l&rsquo;operazione logica di and, il figlo rappresenta il parametro dell&rsquo;istruzione.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="n">children</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">children</span>
+    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">ARBOOLOPERATIONS_TYPE</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">DT_COMMAND</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">children</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">())},</span> <span class="p">[</span><span class="n">visit</span><span class="p">(</span><span class="n">child</span><span class="p">)</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">children</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-55'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-55'>#</a>
+      </div>
+      <h3><span id="string" href="string">string</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="nd">@logoToAst.register</span>
+<span class="k">def</span> <span class="nf">STRING</span><span class="p">(</span><span class="n">visit</span><span class="p">,</span> <span class="n">tree</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-56'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-56'>#</a>
+      </div>
+      <p>Definisce una stringa, il valore viene salvato all&rsquo;interno del nodo senza il carattere <code>"</code></p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">return</span> <span class="n">Tree</span><span class="p">({</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span> <span class="s1">&#39;value&#39;</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)})</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-57'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-57'>#</a>
+      </div>
+      <h3><span id="parse" href="parse">parse</span></h3>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="n">code</span><span class="p">):</span></pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+  <div class='section' id='section-58'>
+    <div class='docs'>
+      <div class='octowrap'>
+        <a class='octothorpe' href='#section-58'>#</a>
+      </div>
+      <p>La funzione prende in input il codice <strong>logo</strong> da parsare, e ristruttura l&rsquo;albero di parsing generato da ANTLR che restituira&rsquo; come output.</p>
+    </div>
+    <div class='code'>
+      <div class="highlight"><pre>    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">logoToAst</span><span class="p">(</span><span class="n">ANTLR_GRAMMAR</span><span class="o">.</span><span class="n">tree</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="s1">&#39;prog&#39;</span><span class="p">))</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s2">&quot;---Errore di parsing---&quot;</span><span class="p">)</span>
+
+</pre></div>
+    </div>
+  </div>
+  <div class='clearall'></div>
+</div>
+</body>
