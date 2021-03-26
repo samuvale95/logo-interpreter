@@ -21,5 +21,5 @@ For all project in the docs folder there is complete documentation for all code.
 One of the main components project is the [Liblet](https://github.com/let-unimi/liblet) library, develop by prof. [Massimo Santini](https://github.com/mapio) for his course. For a correct execution and installation of this project refer to [Liblet documentation](https://liblet.readthedocs.io/en/latest/index.html).
 
 1. Clone this repository
-2. install requirements from *requirements.txt*
+2. run `pip install -r requirements.txt`
 3. run `test.py` to check if all code work correctly.
